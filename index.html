@@ -783,40 +783,6 @@
       }
       /* ===== End Header / Centering ===== */
 
-      /* iOS Safari seam fix for sticky + blur headers */
-    header {
-      /* keep your existing styles, then add/replace the lines below */
-      border-bottom: 0 !important;                 /* remove the 1px seam source */
-      box-shadow: 0 1px 0 rgba(0,0,0,.08);         /* subtle divider instead of border */
-
-      background-clip: padding-box;                /* avoid bleed at edge */
-      -webkit-background-clip: padding-box;
-
-      transform: translateZ(0);                    /* force proper compositing */
-      isolation: isolate;                          /* new stacking context */
-    }
-
-    /* Prevent margin-collapsing between header and first section */
-    .hero, section:first-of-type { 
-      margin-top: 0 !important;
-    }
-
-    /* If your hero’s first child (e.g., .hero-glass / h1) had top margin, neutralize it */
-    .hero > *:first-child { margin-top: 0; }
-
-    /* Respect iOS safe-area so content doesn't peek under the notch */
-    @supports (padding: max(0px)) {
-      header { padding-top: max(0px, env(safe-area-inset-top)); }
-    }
-  
-  header::after {
-    content:"";
-    position:absolute; left:0; right:0; bottom:-1px; height:1px;
-    background: rgba(0,0,0,.06);
-    pointer-events:none;
-}
-
-
 /* ===== Mobile-safe HERO overrides (no zoom, no fixed bg) ===== */
 .hero { 
   background: none !important;
@@ -874,6 +840,53 @@
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   border: 0;
+}
+
+/* iOS/WebKit seam fix: avoid sticky+blur on phones */
+:root { --mobile-header-h: 72px; } /* adjust if your header is taller */
+
+/* Mobile browsers on iOS (and small screens generally) */
+@media (max-width: 768px) {
+  header {
+    position: fixed;                 /* replace sticky to avoid seam */
+    top: 0; left: 0; right: 0;
+    height: var(--mobile-header-h);
+    z-index: 1000;
+
+    /* turn OFF true blur on mobile (causes seam) */
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+
+    background: #fff !important;     /* solid, no transparency */
+    border-bottom: 0 !important;     /* remove seam source */
+    box-shadow: 0 1px 0 rgba(0,0,0,.08); /* subtle divider */
+    isolation: isolate;              /* own stacking context */
+  }
+
+  /* Make room for the fixed header */
+  body { padding-top: calc(var(--mobile-header-h) + 8px); }
+
+  /* Prevent any top-margin bleeding into header */
+  header + * { margin-top: 0 !important; }
+  .hero, section:first-of-type { margin-top: 0 !important; }
+  .hero > *:first-child { margin-top: 0 !important; }
+
+  /* Draw our own crisp 1px edge to replace the border */
+  header::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+    background: rgba(0,0,0,.06);
+    pointer-events: none;
+  }
+}
+
+/* Desktop/tablet can keep the glassy header you like */
+@media (min-width: 769px) {
+  header {
+    position: sticky;
+    top: 0;
+    /* keep your blur styles here */
+  }
 }
 
 /* ===== End HERO overrides ===== */
