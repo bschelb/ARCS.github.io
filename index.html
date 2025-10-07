@@ -808,6 +808,14 @@
     @supports (padding: max(0px)) {
       header { padding-top: max(0px, env(safe-area-inset-top)); }
     }
+  
+  header::after {
+    content:"";
+    position:absolute; left:0; right:0; bottom:-1px; height:1px;
+    background: rgba(0,0,0,.06);
+    pointer-events:none;
+}
+
 
 /* ===== Mobile-safe HERO overrides (no zoom, no fixed bg) ===== */
 .hero { 
