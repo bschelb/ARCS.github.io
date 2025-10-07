@@ -842,50 +842,40 @@
   border: 0;
 }
 
-/* iOS/WebKit seam fix: avoid sticky+blur on phones */
-:root { --mobile-header-h: 72px; } /* adjust if your header is taller */
-
-/* Mobile browsers on iOS (and small screens generally) */
+/* ===== Mobile header: solid, auto-height, no blur, no seam ===== */
 @media (max-width: 768px) {
   header {
-    position: fixed;                 /* replace sticky to avoid seam */
-    top: 0; left: 0; right: 0;
-    height: var(--mobile-header-h);
-    z-index: 1000;
-
-    /* turn OFF true blur on mobile (causes seam) */
+    position: sticky;                 /* back to sticky so no overlap math */
+    top: 0;
+    background: #fff !important;      /* solid background = no seam */
     -webkit-backdrop-filter: none !important;
             backdrop-filter: none !important;
-
-    background: #fff !important;     /* solid, no transparency */
-    border-bottom: 0 !important;     /* remove seam source */
-    box-shadow: 0 1px 0 rgba(0,0,0,.08); /* subtle divider */
-    isolation: isolate;              /* own stacking context */
+    border-bottom: 0 !important;      /* borders trigger hairlines */
+    box-shadow: 0 1px 0 rgba(0,0,0,.08);  /* subtle divider instead */
+    overflow: hidden;                  /* prevents any internal bleed */
+    background-clip: padding-box;
+    -webkit-background-clip: padding-box;
+    transform: translateZ(0);          /* stable compositing on iOS */
+    isolation: isolate;
   }
 
-  /* Make room for the fixed header */
-  body { padding-top: calc(var(--mobile-header-h) + 8px); }
+  /* Keep the header compact and consistent */
+  .nav-container { padding: 10px 16px; }
+  .brand img { max-height: 44px; height: 44px; width: auto; display: block; }
 
-  /* Prevent any top-margin bleeding into header */
+  /* Make sure no first-section margin peeks under header */
   header + * { margin-top: 0 !important; }
   .hero, section:first-of-type { margin-top: 0 !important; }
   .hero > *:first-child { margin-top: 0 !important; }
+}
 
-  /* Draw our own crisp 1px edge to replace the border */
+/* If any 1px line still appears, draw our own crisp edge and avoid borders */
+@media (max-width: 768px) {
   header::after {
     content: "";
     position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
     background: rgba(0,0,0,.06);
     pointer-events: none;
-  }
-}
-
-/* Desktop/tablet can keep the glassy header you like */
-@media (min-width: 769px) {
-  header {
-    position: sticky;
-    top: 0;
-    /* keep your blur styles here */
   }
 }
 
