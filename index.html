@@ -879,6 +879,33 @@
   }
 }
 
+/* --- Fix mobile menu dropdown --- */
+@media (max-width: 768px) {
+  header { 
+    overflow: visible !important;        /* allow the menu to spill below */
+    z-index: 1000;                       /* keep it above the page */
+  }
+  nav { 
+    position: relative;                  /* anchor for the dropdown */
+  }
+  /* The dropdown panel */
+  nav ul {
+    position: absolute;                  /* sit below the header */
+    top: 100%;                           /* exactly under the header bar */
+    left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 12px 24px rgba(0,0,0,.08);
+    max-height: 0;                       /* collapsed by default (your JS toggles .show) */
+    overflow: hidden;
+    transition: max-height .3s ease;
+    z-index: 1001;
+  }
+  nav ul.show {
+    max-height: 420px;                   /* expanded height */
+  }
+}
+
 /* ===== End HERO overrides ===== */
 
 </style>
