@@ -782,7 +782,33 @@
         text-align: center !important;
       }
       /* ===== End Header / Centering ===== */
-    
+
+      /* iOS Safari seam fix for sticky + blur headers */
+    header {
+      /* keep your existing styles, then add/replace the lines below */
+      border-bottom: 0 !important;                 /* remove the 1px seam source */
+      box-shadow: 0 1px 0 rgba(0,0,0,.08);         /* subtle divider instead of border */
+
+      background-clip: padding-box;                /* avoid bleed at edge */
+      -webkit-background-clip: padding-box;
+
+      transform: translateZ(0);                    /* force proper compositing */
+      isolation: isolate;                          /* new stacking context */
+    }
+
+    /* Prevent margin-collapsing between header and first section */
+    .hero, section:first-of-type { 
+      margin-top: 0 !important;
+    }
+
+    /* If your hero’s first child (e.g., .hero-glass / h1) had top margin, neutralize it */
+    .hero > *:first-child { margin-top: 0; }
+
+    /* Respect iOS safe-area so content doesn't peek under the notch */
+    @supports (padding: max(0px)) {
+      header { padding-top: max(0px, env(safe-area-inset-top)); }
+    }
+
 /* ===== Mobile-safe HERO overrides (no zoom, no fixed bg) ===== */
 .hero { 
   background: none !important;
