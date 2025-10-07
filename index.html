@@ -879,32 +879,52 @@
   }
 }
 
-/* --- Fix mobile menu dropdown --- */
+/* ===== Mobile nav: full-width dropdown under header ===== */
 @media (max-width: 768px) {
-  header { 
-    overflow: visible !important;        /* allow the menu to spill below */
-    z-index: 1000;                       /* keep it above the page */
-  }
-  nav { 
-    position: relative;                  /* anchor for the dropdown */
-  }
-  /* The dropdown panel */
+  /* Let the menu overflow below the header */
+  header { overflow: visible !important; z-index: 1000; }
+
+  /* Anchor for absolute positioning */
+  nav { position: relative; }
+
+  /* Dropdown panel */
   nav ul {
-    position: absolute;                  /* sit below the header */
-    top: 100%;                           /* exactly under the header bar */
-    left: 0; right: 0;
+    position: absolute;
+    top: 100%;                /* sits just below the header bar */
+    left: 0;
+    right: 0;
+    margin: 0;
     background: #fff;
     border-top: 1px solid #e5e7eb;
-    box-shadow: 0 12px 24px rgba(0,0,0,.08);
-    max-height: 0;                       /* collapsed by default (your JS toggles .show) */
+    box-shadow: 0 12px 24px rgba(0,0,0,.10);
+    z-index: 1001;
+
+    /* collapsed by default; no internal scrollbar band */
+    max-height: 0;
     overflow: hidden;
     transition: max-height .3s ease;
-    z-index: 1001;
   }
+
+  /* Expanded state (your JS adds .show) */
   nav ul.show {
-    max-height: 420px;                   /* expanded height */
+    max-height: calc(100vh - 64px);   /* plenty of room; adjusts to viewport */
+    overflow: auto;                   /* scroll only if really needed */
+    -webkit-overflow-scrolling: touch;
   }
+
+  /* Make menu items easy to tap */
+  nav ul li { border-bottom: 1px solid #f1f5f9; }
+  nav ul li:last-child { border-bottom: 0; }
+  nav ul a {
+    display: block;
+    padding: 14px 18px;
+    text-decoration: none;
+    color: #111827;
+    font-weight: 600;
+  }
+  nav ul a:active, nav ul a:hover { background: #fff7ef; }
 }
+
 
 /* ===== End HERO overrides ===== */
 
