@@ -128,7 +128,7 @@
         text-align: center;
         color: #fff;
         isolation: isolate;
-        animation: hero-zoom 18s ease-in-out infinite alternate;
+        /* animation: none; */
       }
       section.hero {
         padding: 0;
@@ -494,8 +494,7 @@
         text-decoration: none;
         font-weight: 600;
         box-shadow: 0 8px 22px rgba(255, 130, 0, 0.25);
-        transition: transform 0.2s ease, box-shadow 0.2s ease,
-          background 0.2s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
       }
       .btn:hover {
         transform: translateY(-2px);
@@ -515,10 +514,18 @@
       }
 
       /* PEOPLE */
+/* People — centered rows with even gaps */
       #people .people-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, 320px); /* fixed card width */
+        justify-content: center;                         /* center the whole group */
+        gap: 1.75rem;
+        margin-inline: auto;                             /* center inside section */
+        max-width: 1200px;                               /* keep rows tidy on xl screens */
+}
+/* Make sure cards don’t try to stretch wider */
+      .person { 
+        width: 320px; max-width: 100%; 
       }
       .person {
         background: #fff;
@@ -567,6 +574,26 @@
       .person .links a:hover {
         border-bottom-style: solid;
       }
+      /* Make ALL links inside a .person look the same, even if not wrapped in .links */
+#people .person a {
+  color: var(--ut-orange) !important;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px dashed rgba(255, 130, 0, 0.5);
+}
+#people .person a:hover { border-bottom-style: solid; }
+#people .person a:visited { color: var(--ut-orange) !important; }
+
+/* Optional: consistent divider styling for the “|” */
+#people .person .divider {
+  color: #333;
+  margin: 0 6px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* (If you want centered bios) */
+#people .person p { text-align: center; }  /* replace your left-align rule */
 
       /* CONTACT */
       #contact {
@@ -755,7 +782,69 @@
         text-align: center !important;
       }
       /* ===== End Header / Centering ===== */
-    </style>
+    
+/* ===== Mobile-safe HERO overrides (no zoom, no fixed bg) ===== */
+.hero { 
+  background: none !important;
+  position: relative;
+  overflow: hidden;
+}
+.hero .hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+.hero .hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 88%;
+  display: block;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.45) 0%,
+    rgba(0,0,0,.15) 45%,
+    rgba(0,0,0,0) 70%
+  );
+}
+@media (max-width: 768px), (pointer: coarse) {
+  .hero .hero-bg img { object-position: 50% 88%; }
+  .hero { padding: 8vh 1rem; min-height: 60vh; }
+  .hero::after {
+    -webkit-mask-image: none !important;
+            mask-image: none !important;
+    background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,0)) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero { animation: none !important; }
+}
+
+/* Map embed */
+.map-embed {
+  position: relative;
+  width: 100%;
+  height: 320px;               /* tweak if you want taller */
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+.map-embed iframe {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: 0;
+}
+
+/* ===== End HERO overrides ===== */
+
+</style>
   </head>
   <body>
     <header>
@@ -790,7 +879,7 @@
 
     <!-- HERO -->
     <section class="hero">
-      <div class="hero-glass">
+      <picture class="hero-bg"><source media="(max-width: 768px)" srcset="assets/downtownPic-mobile.jpg"><img src="assets/downtownPic.jpg" alt="" aria-hidden="true" loading="eager" decoding="async"></picture><div class="hero-glass">
         <h1 class="reveal">AI & Robotics for Collaborative Systems Lab</h1>
         <p class="reveal">
           Advancing human-AI teaming by understanding and optimizing
@@ -901,7 +990,7 @@
           />
           <h3>Dr. Beau Schelble</h3>
           <p>
-            <strong>Professor &amp; Lab Director</strong> <br />About: Dr. Beau
+            <strong>Professor &amp; Lab Director</strong> <br />Dr. Beau
             G. Schelble is currently an assistant professor of industrial and
             systems engineering at the University of Tennessee, Knoxville, and
             is the founding director of the AI and Robotics for Collaborative
@@ -914,33 +1003,38 @@
             trust, and shared knowledge.
           </p>
           <div class="links">
-            <a href="mailto:bschelbl@utk.edu">Email</a> |
-            <a href="https://scholar.google.com" target="_blank">Scholar</a>
+            <a href="mailto:bschelbl@utk.edu">Email</a>
+            <span class="divider">|</span>
+            <a href="https://scholar.google.com/citations?user=bg4YvZIAAAAJ&hl=en&oi=ao" target="_blank" rel="noopener">Scholar</a>
           </div>
         </div>
         <div class="person">
           <img src="assets/sarahHeadshot.jpg" alt="Student Portrait" />
           <h3>Sarah Mendoza</h3>
           <p>
-            <strong>PhD Student<br /></strong> About: Hello hello! I’m Sarah
+            <strong>PhD Student<br /></strong> Hello hello! I’m Sarah
             Mendoza and I’m from Clemson, South Carolina. Guided by my curiosity
             for people and interpersonal behaviors, I graduated from Clemson
             University with my bachelor’s degree in Psychology in May 2025. I
-            was brought into the world of Human-Autonomous Teams (HATs) during
+            was brought into the world of human-AI teams during
             my time there- researching everything from trust perceptions, to
             autonomy levels, to teamwork versus taskwork. This, coupled with my
             minor in Computer Science, has prompted me to further explore the
-            various dimensions of HATs within the ARCS lab! When I’m not
+            various dimensions of human-AI teams within the ARCS lab! When I’m not
             working, I’m probably in the gym, checking out a new café, or
             playing The Sims 3.
           </p>
-          <a href="mailto:smendoz9@vols.utk.edu">Email</a> | TBD
+          <div class="links">
+            <a href="mailto:smendoz9@vols.utk.edu">Email</a>
+            <span class="divider">|</span>
+            <span>TBD</span>
+          </div>
         </div>
         <div class="person">
           <img src="assets/yayunHeadshot.jpg" alt="Student Portrait" />
           <h3>Yayun Tian</h3>
           <p>
-            <strong>PhD Student<br /></strong> About: Hi, I’m Yayun Tian, and
+            <strong>PhD Student<br /></strong> Hi, I’m Yayun Tian, and
             I’m a Ph.D. student in Industrial and Systems Engineering at the
             University of Tennessee, Knoxville. I graduated from Stony Brook
             University in 2020 with a Bachelor’s degree in Applied Mathematics
@@ -952,7 +1046,11 @@
             supportive role in teamwork, not just as a tool, but as a trusted
             and capable teammate.
           </p>
-          <a href="mailto:ytian21@vols.utk.edu">Email</a> | TBD
+          <div class="links">
+            <a href="mailto:ytian21@vols.utk.edu">Email</a>
+            <span class="divider">|</span>
+            <span>TBD</span>
+          </div>
         </div>
       </div>
     </section>
@@ -1609,7 +1707,7 @@
           target="_blank"
           rel="noopener"
           >Google Scholar</a
-        >.
+        >
       </p>
     </section>
 
@@ -1631,18 +1729,15 @@
             ><span class="badge">Robotics</span><span class="badge">HCI</span>
           </div>
           <div class="btn-row">
-            <a class="btn" href="#contact">Contact ARCS</a>
-            <a href="mailto:ytian21@vols.utk.edu"
-              >Email Interest in Joining Lab</a
-            >
+            <a class="btn" href="mailto:bschelbl@utk.edu">Contact ARCS</a>
           </div>
         </div>
         <div class="opps-card">
           <p>
             <strong>Who should apply?</strong><br />Curious builders and
             rigorous thinkers across ISE, CS, HCI, Psychology, and related
-            fields. Experience with experiments, stats/ML, or robotics is
-            great—but motivation and craft matter most.
+            fields. Experience in conducting experiments, stats/ML, or robotics is
+            great, but motivation and craft matter most.
           </p>
           <p class="lead" style="margin-top: 0.75rem">
             Funding varies by cycle; outstanding undergrads &amp; grads are
@@ -1662,7 +1757,6 @@
             ><br />
             515 John D. Tickle Engineering Building<br />
             851 Neyland Drive, Knoxville, TN 37996-2315<br />
-            Email: <a href="mailto:bschelbl@utk.edu">bschelbl@utk.edu</a>
           </p>
           <ul class="contact-list">
             <li>
@@ -1676,7 +1770,16 @@
           </button>
         </div>
         <div class="contact-card">
-          <div class="map-placeholder">Campus map / directions</div>
+          <div class="map-embed">
+            <iframe
+              title="ARCS Lab location"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+              src="https://www.google.com/maps?q=515%20John%20D.%20Tickle%20Engineering%20Building%2C%20851%20Neyland%20Dr%2C%20Knoxville%2C%20TN%2037996-2315&output=embed">
+            </iframe>
+</div>
+
         </div>
       </div>
     </section>
